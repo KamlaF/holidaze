@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 
 const Navbar = () => {
-  const { isAuthenticated, userRole } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
+  const [userRole, setUserRole] = useState('');
+
+  useAuthStore.subscribe(() => {
+    setUserRole(useAuthStore.getState().userRole);
+  });
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
