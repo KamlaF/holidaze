@@ -4,23 +4,22 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store/authStore'; // Antar at dette er opprettet for tilstandsforvaltning
-
-const schema = yup.object({
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().required('Password is required'),
-}).required();
+import useAuthStore from '../store/authStore';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const authStore = useAuthStore();
+
+  // Define schema using yup
+  const schema = yup.object({
+    email: yup.string().email('Invalid email').required('Email is required'),
+    password: yup.string().required('Password is required'),
+  }).required();
+
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async data => {
-    // Integrer med API for innlogging her
-    // Eksempel på hvordan du kan integrere med API (endre URL og håndtering som nødvendig)
     try {
       const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/login', {
         method: 'POST',
@@ -32,12 +31,14 @@ const LoginForm = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        // Oppdater tilstand basert på respons, f.eks. lagre token, sette brukerinfo, osv.
-        authStore.setUser(responseData);
-        // Redirect basert på om brukeren er manager eller ikke
-        navigate(responseData.isManager ? '/manager-dashboard' : '/'); // Endre paths som nødvendig
+        const userRole = responseData.userRole;
+        useAuthStore.getState().setUser(userRole); // Set user role in auth store
+        if (userRole === 'manager') {
+          navigate('/manager-dashboard'); // Redirect to manager dashboard if user is a manager
+        } else {
+          navigate('/'); // Redirect to home page for regular users
+        }
       } else {
-        // Håndter feil, f.eks. vis feilmelding
         console.error('Login failed');
       }
     } catch (error) {
