@@ -1,11 +1,14 @@
+
 // src/store/authStore.js
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useAuthStore = create((set) => ({
   isAuthenticated: false,
-  userRole: null, // 'user' or 'manager'
-  setUser: (role) => set({ isAuthenticated: true, userRole: role }),
+  userRole: null,
+  setUser: ({ isAuthenticated, userRole }) => set({ isAuthenticated, userRole }),
   clearUser: () => set({ isAuthenticated: false, userRole: null }),
 }));
 
 export default useAuthStore;
+
+

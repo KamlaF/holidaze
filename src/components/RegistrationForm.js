@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import useAuthStore from '../store/authStore';
+
 
 const schema = yup.object({
   name: yup.string().required('Name is required'),
@@ -21,36 +21,32 @@ const RegistrationForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    // Transform data before sending it
-    const transformedData = {
-      ...data,
-      venueManager: data.isManager, // Transforms 'isManager' to a field expected by the backend
-    };
-
-    try {
-      const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transformedData), // Use transformed data
-      });
-
-      if (response.ok) {
-        console.log('Registration successful', await response.json());
-        // Optionally set user role in state here, if needed
-        // For example, if you want to log in the user right away
-        useAuthStore.getState().setUser({ isAuthenticated: true, userRole: transformedData.venueManager ? 'manager' : 'user' });
-        navigate('/login'); // Redirect to the login page
-      } else {
-        const errorData = await response.json();
-        console.error('Registration failed', errorData);
-      }
-    } catch (error) {
-      console.error('There was an error sending the request', error);
-    }
+ const onSubmit = async (data) => {
+  const transformedData = {
+    ...data,
+    venueManager: data.isManager,
   };
+
+  try {
+    const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(transformedData),
+    });
+
+    if (response.ok) {
+      console.log('Registration successful', await response.json());
+      navigate('/login'); // Redirect til login siden uten å endre autentiseringstilstanden
+    } else {
+      const errorData = await response.json();
+      console.error('Registration failed', errorData);
+    }
+  } catch (error) {
+    console.error('There was an error sending the request', error);
+  }
+};
 
   return (
     <div className="flex justify-center items-center h-screen">

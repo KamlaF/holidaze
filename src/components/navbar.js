@@ -3,13 +3,22 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 
 const Navbar = () => {
-  const { isAuthenticated } = useAuthStore();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Define isMenuOpen state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Oppdater for å bruke tilstand for autentiseringsstatus og brukerrolle
+  const [userRole, setUserRole] = useState(useAuthStore.getState().userRole);
+  const [isAuthenticated, setIsAuthenticated] = useState(useAuthStore.getState().isAuthenticated);
 
-  useEffect(() => {
-    const unsubscribe = useAuthStore.subscribe(() => {});
-    return () => unsubscribe();
-  }, []);
+ useEffect(() => {
+  const unsubscribe = useAuthStore.subscribe(() => {
+    const { isAuthenticated, userRole } = useAuthStore.getState();
+    console.log("Updated state in Navbar:", { isAuthenticated, userRole });
+    setIsAuthenticated(isAuthenticated);
+    setUserRole(userRole);
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
   const handleLogout = () => {
     useAuthStore.getState().clearUser();
@@ -30,7 +39,7 @@ const Navbar = () => {
 
       <div className={`mt-4 md:mt-0 ${isMenuOpen ? 'block' : 'hidden'} md:flex md:items-center`}>
         <Link to="/" className="block mt-2 md:mt-0 mr-4 hover:underline">Home</Link>
-        {isAuthenticated && useAuthStore.getState().userRole === 'manager' ? (
+        {isAuthenticated && userRole === 'manager' ? (
           <>
             <Link to="/venues" className="block mt-2 md:mt-0 mr-4 hover:underline">Venues</Link>
             <Link to="/profile" className="block mt-2 md:mt-0 mr-4 hover:underline">Profile</Link>
@@ -57,6 +66,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
