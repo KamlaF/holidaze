@@ -30,12 +30,13 @@ const onSubmit = async (data) => {
 
     if (response.ok) {
       const responseData = await response.json();
-      // Anta at responseData inneholder et felt som indikerer om brukeren er en manager
-      // Dette feltet kan variere avhengig av API-responsen; juster som nødvendig
-      const userRole = responseData.venueManager ? 'manager' : 'user';
-      useAuthStore.getState().setUser({ isAuthenticated: true, userRole });
+      // Store accessToken in local storage
+      localStorage.setItem('accessToken', responseData.accessToken);
 
-      // Redirect basert på om brukeren er en manager eller ikke
+      const userRole = responseData.venueManager ? 'manager' : 'user';
+      useAuthStore.getState().setUser({ isAuthenticated: true, userRole, accessToken: responseData.accessToken });
+
+      // Redirect based on user role
       navigate('/');
     } else {
       console.error('Login failed');
@@ -44,6 +45,7 @@ const onSubmit = async (data) => {
     console.error('Error during login:', error);
   }
 };
+
 
 
   return (
