@@ -20,38 +20,39 @@ const RegistrationForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async data => {
-    try {
-      const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+const onSubmit = async data => {
+  try {
+    // Update data structure to match API requirements
+    const payload = {
+      ...data,
+      venueManager: data.isManager, // Correctly map isManager to venueManager
+    };
+    // Remove isManager from payload as it's not expected by the API
+    delete payload.isManager;
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log('Registration successful', responseData);
+    const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload), // Use the updated payload
+    });
 
-        // Sjekk om autentiseringsnøkkelen er tilgjengelig i responsen
-        const authToken = responseData.token;
-        if (authToken) {
-          // Lagre autentiseringsnøkkelen i Local Storage
-          localStorage.setItem('authToken', authToken);
-        } else {
-          console.error('Authentication token not found in response');
-        }
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('Registration successful', responseData);
 
-        navigate('/login'); // Omdiriger til innloggingssiden
-      } else {
-        const errorData = await response.json();
-        console.error('Registration failed', errorData);
-      }
-    } catch (error) {
-      console.error('There was an error sending the request', error);
+      // Navigate to login page after successful registration
+      navigate('/login');
+    } else {
+      const errorData = await response.json();
+      console.error('Registration failed', errorData);
     }
-  };
+  } catch (error) {
+    console.error('There was an error sending the request', error);
+  }
+};
+
 
   return (
     <div className="flex justify-center items-center h-screen">
