@@ -1,43 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import VenueCalendar from './VenueCalendar';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const VenueDetail = () => {
   const { id } = useParams();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchVenueDetails = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(`https://api.noroff.dev/api/v1/holidaze/venues/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setVenue(data);
-        } else {
-          setError('Failed to fetch venue details');
+        const venueResponse = await fetch(`https://api.noroff.dev/api/v1/holidaze/venues/${id}`);
+        if (!venueResponse.ok) {
+          throw new Error('Failed to fetch venue details');
         }
+        const venueData = await venueResponse.json();
+        setVenue(venueData);
       } catch (error) {
-        setError('Error fetching venue details: ' + error.message);
+        setError(`Error: ${error.message}`);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVenueDetails();
+    fetchData();
   }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!venue) {
-    return <div>Venue not found</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!venue) return <div>Venue not found</div>;
 
   return (
     <div className="max-w-lg mx-auto mt-8">
@@ -53,7 +47,7 @@ const VenueDetail = () => {
       <p className="font-bold">Rating: {venue.rating}</p>
       <div className="mt-4">
         <h3 className="font-bold">Location</h3>
-        <p>{venue.location.address}, {venue.location.city}, {venue.location.zip}</p>
+        <p>{`${venue.location.address}, ${venue.location.city}, ${venue.location.zip}`}</p>
         <p>{venue.location.country}</p>
       </div>
       <div className="mt-4">
@@ -65,11 +59,20 @@ const VenueDetail = () => {
           <li>Pets: {venue.meta.pets ? 'Allowed' : 'Not allowed'}</li>
         </ul>
       </div>
+      <div className="mt-4">
+        <h3 className="font-bold">Available Dates</h3>
+        <VenueCalendar venueId={id} />
+      </div>
     </div>
   );
 };
 
 export default VenueDetail;
+
+
+
+
+
 
 
 
