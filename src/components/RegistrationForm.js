@@ -4,13 +4,15 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+// Schema definition for form validation
 const schema = yup.object({
-  name: yup.string().required('Name is required'), // Validering for navnefeltet
+  name: yup.string().required('Name is required')
+            .matches(/^\w+$/, 'Name must not contain punctuation symbols apart from underscore'),
   email: yup.string()
             .email('Invalid email')
             .required('Email is required')
-            .matches(/@stud.noroff.no$/, 'Email must be a Noroff student email'),
-  password: yup.string().required('Password is required'),
+            .matches(/@stud\.noroff\.no$/, 'Email must be a Noroff student email'),
+  password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters long'),
   isManager: yup.boolean(),
 }).required();
 
@@ -20,72 +22,77 @@ const RegistrationForm = () => {
     resolver: yupResolver(schema),
   });
 
-const onSubmit = async data => {
-  try {
-    // Update data structure to match API requirements
-    const payload = {
-      ...data,
-      venueManager: data.isManager, // Correctly map isManager to venueManager
-    };
-    // Remove isManager from payload as it's not expected by the API
-    delete payload.isManager;
+  const onSubmit = async data => {
+    try {
+      const payload = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        venueManager: data.isManager || false, // Ensure boolean value for venueManager
+      };
 
-    const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload), // Use the updated payload
-    });
+      const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (response.ok) {
-      const responseData = await response.json();
-      console.log('Registration successful', responseData);
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Registration successful', responseData);
 
-      // Navigate to login page after successful registration
-      navigate('/login');
-    } else {
-      const errorData = await response.json();
-      console.error('Registration failed', errorData);
+        // Optionally, save user name or other details locally if needed for later use
+        // localStorage.setItem('userName', data.name);
+
+        navigate('/login'); // Navigate to login upon successful registration
+      } else {
+        const errorData = await response.json();
+        console.error('Registration failed', errorData);
+        alert('Registration failed: ' + (errorData.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('There was an error sending the request', error);
+      alert('An error occurred during registration. Please try again later.');
     }
-  } catch (error) {
-    console.error('There was an error sending the request', error);
-  }
-};
-
+  };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-lg">
+        {/* Name Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-            Name:
-          </label>
-          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" {...register('name')} />
+          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+          <input id="name" type="text" {...register('name')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
           {errors.name && <p className="text-red-500 text-xs italic">{errors.name.message}</p>}
         </div>
+
+        {/* Email Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-            Email:
-          </label>
-          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" {...register('email')} />
+          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+          <input id="email" type="email" {...register('email')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
           {errors.email && <p className="text-red-500 text-xs italic">{errors.email.message}</p>}
         </div>
+
+        {/* Password Input */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-            Password:
-          </label>
-          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" {...register('password')} />
+          <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+          <input id="password" type="password" {...register('password')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
           {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}
         </div>
+
+        {/* Manager Checkbox */}
         <div className="mb-6">
           <label className="inline-flex items-center">
-            <input className="form-checkbox h-5 w-5 text-gray-600" type="checkbox" {...register('isManager')} />
+            <input type="checkbox" {...register('isManager')} className="form-checkbox h-5 w-5 text-gray-600" />
             <span className="ml-2 text-gray-700">Register as a manager</span>
           </label>
         </div>
+
+        {/* Submit Button */}
         <div className="flex items-center justify-between">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Register
           </button>
         </div>
@@ -95,3 +102,4 @@ const onSubmit = async data => {
 };
 
 export default RegistrationForm;
+
