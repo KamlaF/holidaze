@@ -14,15 +14,6 @@ const CreateVenueForm = () => {
             parking: false,
             breakfast: false,
             pets: false
-        },
-        location: {
-            address: '',
-            city: '',
-            zip: '',
-            country: '',
-            continent: '',
-            lat: '',
-            lng: ''
         }
     });
 
@@ -39,23 +30,6 @@ const CreateVenueForm = () => {
         } else {
             if (name in venueData) {
                 setVenueData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
-            } else {
-                const keys = name.split('.');
-                if (keys.length === 2) {
-                    let updatedValue = type === 'checkbox' ? checked : value;
-                    if (keys[1] === 'lat' || keys[1] === 'lng') {
-                        // Convert to float or reset to empty string if conversion fails
-                        updatedValue = updatedValue ? parseFloat(updatedValue) : '';
-                        if (isNaN(updatedValue)) updatedValue = ''; // Reset to empty string if NaN
-                    }
-                    setVenueData(prevState => ({
-                        ...prevState,
-                        [keys[0]]: {
-                            ...prevState[keys[0]],
-                            [keys[1]]: updatedValue,
-                        },
-                    }));
-                }
             }
         }
     };
@@ -63,25 +37,14 @@ const CreateVenueForm = () => {
    const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate lat and lng to ensure they are not NaN
-    if (isNaN(parseFloat(venueData.location.lat)) || isNaN(parseFloat(venueData.location.lng))) {
-        console.error('Latitude or Longitude contains invalid value.');
-        return; // Prevent form submission
-    }
-
     const formData = {
         ...venueData,
         price: parseFloat(venueData.price),
         maxGuests: parseInt(venueData.maxGuests, 10),
-        rating: parseInt(venueData.rating, 10),
-        location: {
-            ...venueData.location,
-            lat: parseFloat(venueData.location.lat),
-            lng: parseFloat(venueData.location.lng)
-        }
+        rating: parseInt(venueData.rating, 10)
     };
 
-    console.log(`Submitting with lat: ${formData.location.lat}, lng: ${formData.location.lng}`);
+    console.log('Submitting form data:', formData);
 
     try {
         const response = await fetch('https://api.noroff.dev/api/v1/holidaze/venues', {
@@ -198,6 +161,7 @@ const CreateVenueForm = () => {
 };
 
 export default CreateVenueForm;
+
 
 
 
