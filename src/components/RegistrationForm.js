@@ -29,8 +29,8 @@ const onSubmit = async data => {
       name: data.name,
       email: data.email,
       password: data.password,
-      venueManager: data.isManager || false, // Ensure boolean value for venueManager
-      avatar: data.avatar || '', // Include avatar URL in the payload, default to empty string if not provided
+      venueManager: data.isManager || false,
+      avatar: data.avatar || '', 
     };
 
     const response = await fetch('https://api.noroff.dev/api/v1/holidaze/auth/register', {
