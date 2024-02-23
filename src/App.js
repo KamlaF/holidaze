@@ -9,6 +9,7 @@ import VenueDetail from './components/VenueDetail';
 import UpdateVenueForm from './components/UpdateVenueForm'; // Import the UpdateVenueForm component
 import MyBookings from './components/MyBookings';
 import Venues from './components/Venues';
+import Profile from './components/Profile';
 
 function App() {
   const { hydrateAuth, isAuthenticated } = useAuthStore();
@@ -28,6 +29,8 @@ function App() {
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/my-bookings" element={isAuthenticated ? <MyBookings /> : <Navigate to="/login" replace />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" replace />} />
+
         </Routes>
       </Layout>
     </Router>
