@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useAuthStore from '../store/authStore';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const FetchVenues = () => {
   const [venues, setVenues] = useState([]);
@@ -7,6 +8,7 @@ const FetchVenues = () => {
     accessToken: state.accessToken,
     userName: state.userName,
   }));
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -34,13 +36,8 @@ const FetchVenues = () => {
     fetchVenues();
   }, [userName, accessToken]);
 
-  // Helper function to render venue meta data
-  const renderMeta = (meta) => {
-    return Object.entries(meta).map(([key, value]) => (
-      <span key={key} className={`inline-block bg-${value ? 'green' : 'red'}-200 text-${value ? 'green' : 'red'}-700 text-xs font-bold mr-2 px-2.5 py-0.5 rounded`}>
-        {key}: {value ? 'Yes' : 'No'}
-      </span>
-    ));
+  const handleUpdateClick = (venueId) => {
+    navigate(`/venues/update/${venueId}`); // Adjusted to navigate to the update form
   };
 
   return (
@@ -54,13 +51,15 @@ const FetchVenues = () => {
               <div className="p-2">
                 <h4 className="text-lg font-semibold">{venue.name}</h4>
                 <p className="text-sm">{venue.description}</p>
-                <div className="py-2">
-                  {renderMeta(venue.meta)}
-                </div>
+                {/* Additional venue details can be displayed here */}
                 <p className="text-sm">Price: ${venue.price} / night</p>
                 <p className="text-sm">Max Guests: {venue.maxGuests}</p>
-                <p className="text-sm">Rating: {venue.rating}</p>
-                <div className="text-xs text-gray-500">Last updated: {new Date(venue.updated).toLocaleDateString()}</div>
+                <button
+                  onClick={() => handleUpdateClick(venue.id)}
+                  className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Update Venue
+                </button>
               </div>
             </div>
           ))}
@@ -73,6 +72,8 @@ const FetchVenues = () => {
 };
 
 export default FetchVenues;
+
+
 
 
 
