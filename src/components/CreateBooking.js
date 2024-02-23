@@ -30,8 +30,12 @@ const CreateBooking = ({ venueId, onSuccess }) => {
         throw new Error('Failed to create booking');
       }
 
-      onSuccess(); // Callback function to signal success
+      const bookingData = await response.json(); // Get the JSON response body
+      console.log('Booking successful:', bookingData); // Log the successful booking data
+
+      onSuccess(bookingData); // Callback function to signal success, now passing the booking data
     } catch (error) {
+      console.error('Error creating booking:', error); // Log any errors
       setError(error.message);
     }
   };
@@ -48,3 +52,4 @@ const CreateBooking = ({ venueId, onSuccess }) => {
 };
 
 export default CreateBooking;
+

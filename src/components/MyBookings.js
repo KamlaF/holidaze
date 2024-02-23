@@ -11,31 +11,35 @@ const MyBookings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setError('You must be logged in to view bookings.');
+useEffect(() => {
+  if (!isAuthenticated) {
+    setError('You must be logged in to view bookings.');
+    setLoading(false);
+    return;
+  }
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    console.log('Fetching bookings for:', userName); // Log username
+    try {
+      const bookingsResponse = await fetch(`https://api.noroff.dev/api/v1/holidaze/profiles/${userName}/bookings`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      console.log('Bookings response:', bookingsResponse); // Log response object
+      if (!bookingsResponse.ok) throw new Error('Failed to fetch bookings');
+      const bookingsData = await bookingsResponse.json();
+      console.log('Bookings data:', bookingsData); // Log actual bookings data
+      setBookings(bookingsData);
+    } catch (error) {
+      console.error(`Error fetching bookings: ${error.message}`); // Log any errors
+      setError(`Error: ${error.message}`);
+    } finally {
       setLoading(false);
-      return;
     }
+  };
 
-    const fetchBookings = async () => {
-      setLoading(true);
-      try {
-        const bookingsResponse = await fetch(`https://api.noroff.dev/api/v1/holidaze/profiles/${userName}/bookings`, {
-          headers: { 'Authorization': `Bearer ${accessToken}` },
-        });
-        if (!bookingsResponse.ok) throw new Error('Failed to fetch bookings');
-        const bookingsData = await bookingsResponse.json();
-        setBookings(bookingsData);
-      } catch (error) {
-        setError(`Error: ${error.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, [isAuthenticated, userName, accessToken]);
+  fetchBookings();
+}, [isAuthenticated, userName, accessToken]);
 
   if (loading) return <div>Loading bookings...</div>;
   if (error) return <div>Error: {error}</div>;
