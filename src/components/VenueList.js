@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const VenueList = ({ venues }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; // Adjust this number to display more or fewer items per page
+  const itemsPerPage = 12; 
 
   if (!venues || venues.length === 0) {
     return <div className="text-center">No venues available</div>;

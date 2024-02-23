@@ -31,8 +31,6 @@ const LoginForm = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        // Assuming the response includes the user's name and access token
-        // Store the necessary data for authentication and user identification
         localStorage.setItem('authData', JSON.stringify({
           accessToken: responseData.accessToken,
           name: responseData.name, // Storing the user's name for booking retrieval
