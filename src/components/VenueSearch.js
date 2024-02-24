@@ -12,10 +12,11 @@ const VenueSearch = ({ onSearch }) => {
     <div className="mb-4">
       <input
         type="text"
-        placeholder="Search venues"
+        placeholder="Search our venues"
         value={searchQuery}
         onChange={handleSearchInputChange}
-        className="border border-gray-300 rounded-md py-2 px-4 w-full"
+        className="border border-accent-2 rounded-md py-2 px-4 w-full"
+
       />
     </div>
   );

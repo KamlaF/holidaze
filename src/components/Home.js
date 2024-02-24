@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VenueList from './VenueList';
 import VenueSearch from './VenueSearch';
+import frontcover from '../Images/frontcover.png'; // Ensure the path to your image is correct
 
 const Home = () => {
   const [venues, setVenues] = useState([]);
@@ -31,10 +32,6 @@ const Home = () => {
     fetchVenues();
   }, []);
 
-  useEffect(() => {
-    console.log('Venues:', venues);
-  }, [venues]);
-
   const handleSearch = (searchTerm) => {
     const filtered = venues.filter((venue) =>
       venue.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -47,20 +44,35 @@ const Home = () => {
   }
 
   if (error) {
-    return <div className="text-center">Error: {error}</div>;
+    return <div className="text-center text-text1">Error: {error}</div>;
   }
 
   return (
-    <div>
-      <h1>Welcome to Holidaze!</h1>
-      <p>Explore our amazing venues:</p>
-      <VenueSearch onSearch={handleSearch} />
-      <VenueList venues={filteredVenues} />
+    <div className="relative">
+  <div className="relative w-full overflow-hidden" style={{ paddingTop: '40%' }}> {/* Increase paddingTop to make the image container higher */}
+  <img src={frontcover} alt="Holidaze front cover" className="absolute top-0 left-0 w-full h-full object-cover" />
+  <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div> 
+  <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-text-1 font-bold text-5xl" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+    Welcome to Holidaze!
+  </h1>
+</div>
+
+
+
+
+      <div className="mt-10 p-4">
+        <VenueSearch onSearch={handleSearch} />
+        <p className="font-albert text-text1 mt-4">Explore our amazing venues:</p>
+        <div className="overflow-auto">
+          <VenueList venues={filteredVenues} />
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Home;
+
 
 
 

@@ -4,7 +4,6 @@ import useAuthStore from '../store/authStore';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Oppdater for å bruke tilstand for autentiseringsstatus og brukerrolle
   const [userRole, setUserRole] = useState(useAuthStore.getState().userRole);
   const [isAuthenticated, setIsAuthenticated] = useState(useAuthStore.getState().isAuthenticated);
 
@@ -25,7 +24,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-500 text-white p-4">
+    <nav className="bg-background text-text-1 p-4"> 
       <div className="flex justify-between items-center">
         <Link to="/" className="font-bold">Holidaze</Link>
         <div className="md:hidden">
@@ -66,6 +65,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 

@@ -45,13 +45,38 @@ const CreateBooking = ({ venueId, onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} required />
-      <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} required />
-      <input type="number" value={guests} onChange={(e) => setGuests(e.target.value)} min="1" required />
-      <button type="submit">Book Now</button>
-      {error && <p>{error}</p>}
-    </form>
+  <form onSubmit={handleSubmit} className="space-y-4">
+  <input
+    type="date"
+    value={dateFrom}
+    onChange={(e) => setDateFrom(e.target.value)}
+    required
+    className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+  />
+  <input
+    type="date"
+    value={dateTo}
+    onChange={(e) => setDateTo(e.target.value)}
+    required
+    className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+  />
+  <input
+    type="number"
+    value={guests}
+    onChange={(e) => setGuests(e.target.value)}
+    min="1"
+    required
+    className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+  />
+  <button
+    type="submit"
+    className="w-full px-4 py-2 bg-indigo-500 text-white font-bold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+  >
+    Book Now
+  </button>
+  {error && <p className="text-red-500">{error}</p>}
+</form>
+
   );
 };
 
