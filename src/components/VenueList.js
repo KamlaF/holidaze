@@ -46,7 +46,7 @@ const VenueList = ({ venues }) => {
                 <p className="font-bold">Price: {venue.price}</p>
                 <p className="font-bold">Max Guests: {venue.maxGuests}</p>
                 <Link to={`/venues/${venue.id}`}>
-                  <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  <button className="mt-2  bg-background hover:bg-accent-2 text-white font-bold py-2 px-4 rounded">
                     View Listing
                   </button>
                 </Link>
@@ -60,7 +60,7 @@ const VenueList = ({ venues }) => {
           <button
             key={index + 1}
             onClick={() => paginate(index + 1)}
-            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? ' bg-background hover:bg-accent-2 text-white' : 'bg-gray-200'}`}>
             {index + 1}
           </button>
         ))}

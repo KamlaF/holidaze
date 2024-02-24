@@ -60,14 +60,14 @@ const CreateBooking = ({ venueId, onSuccess }) => {
     required
     className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
   />
-  <input
-    type="number"
-    value={guests}
-    onChange={(e) => setGuests(e.target.value)}
-    min="1"
-    required
-    className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-  />
+<input
+  type="number"
+  value={guests}
+  onChange={(e) => setGuests(Number(e.target.value))}
+  min="1"
+  required
+  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+/>
   <button
     type="submit"
     className="w-full px-4 py-2 bg-indigo-500 text-white font-bold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

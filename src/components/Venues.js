@@ -12,11 +12,16 @@ const MyVenues = () => {
   const profileId = 'your_profile_id_here';
 
   return (
-    <div>
-      <h2>My Venues</h2>
-      <CreateVenueForm onCreateVenue={handleCreateVenue} />
-      <FetchVenues profileId={profileId} />
-    </div>
+<div>
+  <h1 className="text-center font-headline text-3xl mb-6">My Venues</h1>
+  <div className="flex">
+    <h3 className="text-3xl font-semibold py-4">Create a new venue</h3>
+    
+  </div>
+  <CreateVenueForm onCreateVenue={handleCreateVenue} />
+  <FetchVenues profileId={profileId} />
+</div>
+
   );
 };
 
