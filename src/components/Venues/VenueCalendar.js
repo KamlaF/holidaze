@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useAuthStore from "../../store/authStore"; // Update the path as necessary
 
 const VenueCalendar = ({ venueId }) => {
   const [bookings, setBookings] = useState([]);
@@ -8,17 +9,23 @@ const VenueCalendar = ({ venueId }) => {
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const accessToken = useAuthStore((state) => state.accessToken); // Access accessToken from Zustand store
+
   useEffect(() => {
     const fetchBookings = async () => {
+      if (!accessToken) {
+        setError("No access token available.");
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
-        // Example assumes you're using accessToken for authorization
-        const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
           `https://api.noroff.dev/api/v1/holidaze/bookings?_venue=true`,
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${accessToken}`, // Use accessToken from Zustand store
             },
           }
         );
@@ -28,7 +35,6 @@ const VenueCalendar = ({ venueId }) => {
         }
 
         const allBookings = await response.json();
-        // Filter bookings for the current venue based on venueId
         const venueBookings = allBookings.filter(
           (booking) => booking.venue.id === venueId
         );
@@ -41,7 +47,7 @@ const VenueCalendar = ({ venueId }) => {
     };
 
     fetchBookings();
-  }, [venueId]);
+  }, [venueId, accessToken]);
 
   // Assuming bookings include dateFrom and dateTo, calculate "unavailable" dates
   const getUnavailableDates = () => {
