@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useAuthStore from "../../store/authStore";
+import useAuthStore from "../../store/authStore"; // Update the path as necessary
 
 const VenueCalendar = ({ venueId }) => {
   const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Assume not loading by default
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const accessToken = useAuthStore((state) => state.accessToken); // Access accessToken from Zustand store
+  const { isAuthenticated, accessToken } = useAuthStore((state) => ({
+    isAuthenticated: state.isAuthenticated,
+    accessToken: state.accessToken,
+  }));
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      if (!accessToken) {
-        setLoading(false);
-        return;
-      }
+    if (!isAuthenticated) {
+      return;
+    }
 
+    const fetchBookings = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `https://api.noroff.dev/api/v1/holidaze/bookings?_venue=true`,
@@ -45,7 +48,7 @@ const VenueCalendar = ({ venueId }) => {
     };
 
     fetchBookings();
-  }, [venueId, accessToken]);
+  }, [venueId, isAuthenticated, accessToken]);
 
   const getUnavailableDates = () => {
     const unavailableDates = bookings.flatMap((booking) => {
@@ -74,10 +77,15 @@ const VenueCalendar = ({ venueId }) => {
     <>
       {loading && <div>Loading calendar...</div>}
       {error && <div>{error}</div>}
+      {!isAuthenticated && (
+        <div>Please log in to see detailed availability.</div>
+      )}
       <DatePicker
         selected={selectedDate}
         onChange={setSelectedDate}
-        filterDate={(date) => !isDateUnavailable(date)}
+        filterDate={
+          isAuthenticated ? (date) => !isDateUnavailable(date) : undefined
+        }
         inline
       />
     </>
