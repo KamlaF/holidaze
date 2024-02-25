@@ -7,7 +7,6 @@ const CreateBooking = ({ venueId, onSuccess }) => {
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState("");
 
-  // Extracting accessToken using useAuthStore
   const { accessToken } = useAuthStore((state) => ({
     accessToken: state.accessToken,
   }));
@@ -15,7 +14,6 @@ const CreateBooking = ({ venueId, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Use accessToken from useAuthStore
     try {
       const response = await fetch(
         "https://api.noroff.dev/api/v1/holidaze/bookings",
