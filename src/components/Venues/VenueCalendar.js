@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useAuthStore from "../../store/authStore"; // Update the path as necessary
+import useAuthStore from "../../store/authStore";
 
 const VenueCalendar = ({ venueId }) => {
   const [bookings, setBookings] = useState([]);
@@ -14,18 +14,16 @@ const VenueCalendar = ({ venueId }) => {
   useEffect(() => {
     const fetchBookings = async () => {
       if (!accessToken) {
-        setError("No access token available.");
         setLoading(false);
         return;
       }
 
-      setLoading(true);
       try {
         const response = await fetch(
           `https://api.noroff.dev/api/v1/holidaze/bookings?_venue=true`,
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`, // Use accessToken from Zustand store
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -49,9 +47,7 @@ const VenueCalendar = ({ venueId }) => {
     fetchBookings();
   }, [venueId, accessToken]);
 
-  // Assuming bookings include dateFrom and dateTo, calculate "unavailable" dates
   const getUnavailableDates = () => {
-    // This would be a more complex function in a real app, considering overlaps, etc.
     const unavailableDates = bookings.flatMap((booking) => {
       const start = new Date(booking.dateFrom);
       const end = new Date(booking.dateTo);
@@ -74,16 +70,17 @@ const VenueCalendar = ({ venueId }) => {
     );
   };
 
-  if (loading) return <div>Loading calendar...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
-    <DatePicker
-      selected={selectedDate}
-      onChange={setSelectedDate}
-      filterDate={(date) => !isDateUnavailable(date)}
-      inline
-    />
+    <>
+      {loading && <div>Loading calendar...</div>}
+      {error && <div>{error}</div>}
+      <DatePicker
+        selected={selectedDate}
+        onChange={setSelectedDate}
+        filterDate={(date) => !isDateUnavailable(date)}
+        inline
+      />
+    </>
   );
 };
 
