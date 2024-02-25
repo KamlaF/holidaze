@@ -6,10 +6,10 @@ import {
   Navigate,
 } from "react-router-dom";
 import useAuthStore from "./store/authStore";
-import Layout from "./components/Home/Layout";
+import Layout from "./components/HomeFolder/Layout";
 import RegistrationForm from "./components/LoginAndRegistration/RegistrationForm";
 import LoginForm from "./components/LoginAndRegistration/LoginForm";
-import Home from "./components/Home/Home";
+import Home from "./components/HomeFolder/Home";
 import VenueDetail from "./components/Venues/VenueDetail";
 import UpdateVenueForm from "./components/Venues/UpdateVenueForm";
 import MyBookings from "./components/Bookings/MyBookings";
