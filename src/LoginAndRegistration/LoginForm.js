@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store/authStore';
+import useAuthStore from '../../store/authStore';
+import { Helmet } from 'react-helmet';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -58,34 +59,40 @@ const LoginForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-   <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-lg">
-  {/* Display login error message */}
-  {loginError && <p className="mb-4 text-red-500 text-sm text-center">{loginError}</p>}
+      <Helmet>
+        <title>Welcome to Holidaze! - Log Into your account</title>
+        <meta name="description" content="Explore and book your next adventure with Holidaze. Log in page for holidaze" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+      <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-lg">
+        {/* Display login error message */}
+        {loginError && <p className="mb-4 text-red-500 text-sm text-center">{loginError}</p>}
 
-  {/* Email Input Field */}
-  <div className="mb-4">
-    <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-    <input type="email" id="email" {...register('email')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-    {errors.email && <p className="text-red-500 text-xs italic">{errors.email.message}</p>}
-  </div>
+        {/* Email Input Field */}
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+          <input type="email" id="email" {...register('email')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          {errors.email && <p className="text-red-500 text-xs italic">{errors.email.message}</p>}
+        </div>
 
-  {/* Password Input Field */}
-  <div className="mb-6">
-    <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-    <input type="password" id="password" {...register('password')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
-    {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}
-  </div>
+        {/* Password Input Field */}
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+          <input type="password" id="password" {...register('password')} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
+          {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}
+        </div>
 
-  {/* Submit Button */}
-  <div className="flex items-center justify-between">
-    <button type="submit" className="bg-background hover:bg-accent-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Log in</button>
-  </div>
-</form>
-</div>
-
+        {/* Submit Button */}
+        <div className="flex items-center justify-between">
+          <button type="submit" className="bg-background hover:bg-accent-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Log in</button>
+        </div>
+      </form>
+    </div>
   );
 };
 
 export default LoginForm;
+
 
 

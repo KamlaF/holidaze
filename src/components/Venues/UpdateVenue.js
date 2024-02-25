@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import useAuthStore from '../store/authStore';
+import React, { useState } from "react";
+import useAuthStore from "../../store/authStore";
 
 const UpdateVenue = ({ venueId, initialVenueData, onUpdate }) => {
   const [venueData, setVenueData] = useState(initialVenueData);
@@ -11,29 +11,32 @@ const UpdateVenue = ({ venueId, initialVenueData, onUpdate }) => {
     const { name, value, type, checked } = e.target;
     setVenueData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://api.noroff.dev/holidaze/venues/${venueId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(venueData),
-      });
+      const response = await fetch(
+        `https://api.noroff.dev/holidaze/venues/${venueId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(venueData),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to update venue');
+        throw new Error("Failed to update venue");
       }
 
       onUpdate(); // Callback to refresh the venue list or data
     } catch (error) {
-      console.error('Error updating venue:', error);
+      console.error("Error updating venue:", error);
     }
   };
 
@@ -42,7 +45,10 @@ const UpdateVenue = ({ venueId, initialVenueData, onUpdate }) => {
       {/* Form fields for venue data */}
       {/* Example for name field */}
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
           Name
         </label>
         <input
@@ -55,7 +61,10 @@ const UpdateVenue = ({ venueId, initialVenueData, onUpdate }) => {
         />
       </div>
       {/* Add more fields for description, media, price, maxGuests, rating, meta, and location */}
-      <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <button
+        type="submit"
+        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
         Update Venue
       </button>
     </form>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuthStore from '../store/authStore';
+import useAuthStore from '../../store/authStore';
 
 const CreateVenueForm = () => {
     const [venueData, setVenueData] = useState({
