@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VenueList from './VenueList';
 import VenueSearch from './VenueSearch';
-import frontcover from '../Images/frontcover.png'; // Ensure the path to your image is correct
+import frontcover from '../Images/frontcover.png'; 
 
 const Home = () => {
   const [venues, setVenues] = useState([]);

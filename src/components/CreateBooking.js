@@ -70,7 +70,7 @@ const CreateBooking = ({ venueId, onSuccess }) => {
 />
   <button
     type="submit"
-    className="w-full px-4 py-2 bg-indigo-500 text-white font-bold rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    className="w-full px-4 py-2 bg-background hover:bg-accent-2 text-white font-bold rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
   >
     Book Now
   </button>
