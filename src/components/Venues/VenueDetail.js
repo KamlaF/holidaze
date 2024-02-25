@@ -86,7 +86,7 @@ const VenueDetail = () => {
         </ul>
       </div>
 
-      <VenueCalendar venueId={id} />
+      <VenueCalendar venueId={id} bookings={venue.bookings} />
 
       {isAuthenticated && userRole !== "manager" && (
         <>
